@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <!--<FrameLayout
+        android:id="@+id/fl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/ib_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="5dp"
+            android:background="@android:color/white"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/admin" />
+
+        <ImageButton
+            android:id="@+id/ib_admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/app_name"
+            android:onClick="onClick"
+            android:src="@drawable/admin" />
+
+    </FrameLayout>-->
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_view"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="articulation.json"
+                app:lottie_loop="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_stall_credentials"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_stall_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="40dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="@string/prompt_id"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimaryDark" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!--<Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/cornered_button"
+                android:text="My Report"
+                android:textColor="@android:color/white" />-->
+
+            <Button
+                android:id="@+id/btn_stall_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/cornered_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="Login"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+        <!--<LinearLayout
+            android:id="@+id/ll_admin_credentials"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_admin_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="40dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="@string/prompt_admin_id"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:textColor="@color/colorPrimaryDark" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_admin_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="40dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="@string/prompt_password"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberPassword"
+                    android:nextFocusForward="@+id/btn_admin_login"
+                    android:textColor="@color/colorPrimaryDark" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_admin_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/cornered_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:onClick="onClick"
+                android:text="Login"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>-->
+
+
+    </FrameLayout>
+
+</LinearLayout>

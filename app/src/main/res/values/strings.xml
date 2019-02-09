@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">BELEventDay</string>
+
+    <string name="prompt_id">Stall ID</string>
+
+    <string name="prompt_amount">Enter Amount</string>
+
+    <string name="prompt_admin_id">Admin ID</string>
+    <string name="prompt_password">Password</string>
+
+    <!-- related to progress bar-->
+    <string name="please_wait">Please wait&#8230;</string>
+    <string name="scan">Scan</string>
+</resources>
