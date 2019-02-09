@@ -16,6 +16,12 @@ public class StaticReferenceClass {
     public static final int NETWORK_ERROR_CODE = 9301;
     public static final int DEFAULT_ODOO_ID = 989819;
 
+    public static final int DEFAULT_USER_TYPE = 1;
+
+    public static String ADMIN_ID = "9901683965";
+    public static String ADMIN_PASSWORD = "9036640528";
+
+
     /*public static final String MODEL_FLEET_VEHICLE = "fleet.vehicle";
 
     public static final String MODEL_INSURANCE_HISTORY = "insurance.history";

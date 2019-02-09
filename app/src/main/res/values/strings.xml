@@ -5,12 +5,16 @@
 
     <string name="prompt_amount">Enter Amount</string>
 
+    <string name="prompt_emp_id">Enter EMP ID</string>
+
     <string name="prompt_admin_id">Admin ID</string>
     <string name="prompt_password">Password</string>
 
+    <string name="scan">Scan</string>
+
+    <string name="register">Register</string>
     <!-- related to progress bar-->
     <string name="please_wait">Please wait&#8230;</string>
-    <string name="scan">Scan</string>
 
     <string-array name="stall_names">
         <item>stall1</item>

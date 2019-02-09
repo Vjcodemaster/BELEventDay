@@ -148,12 +148,15 @@ public class MainActivity extends AppCompatActivity {
 
             db.addData(new DataBaseHelper(sEmpID, sStallName, sAmount, sCurrentTime));
 
-            ArrayList<DataBaseHelper> dbData;
+            //flScanner.setVisibility(View.GONE);
+            llScan.setVisibility(View.VISIBLE);
+            llAmountParent.setVisibility(View.GONE);
+            /*ArrayList<DataBaseHelper> dbData;
             dbData = new ArrayList<>(db.getAllPermanentData());
 
             ArrayList<DataBaseHelper> dbDataTmp;
-            dbDataTmp = new ArrayList<>(db.getAllTemporaryData());
-            Toast.makeText(MainActivity.this, "" + dbData.size() + " " +dbDataTmp.size(), Toast.LENGTH_SHORT).show();
+            dbDataTmp = new ArrayList<>(db.getAllTemporaryData());*/
+            //Toast.makeText(MainActivity.this, "" + dbData.size() + " " +dbDataTmp.size(), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(MainActivity.this, "Please enter amount", Toast.LENGTH_SHORT).show();
         }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import static app_utility.StaticReferenceClass.DEFAULT_ODOO_ID;
+import static app_utility.StaticReferenceClass.DEFAULT_USER_TYPE;
 
 
 public class SharedPreferencesClass {
@@ -110,6 +111,7 @@ public class SharedPreferencesClass {
      * Else won't do anything
      */
 
+
     public void setUserLogStatus(boolean bValue, String sValue){
         /*SharedPreferences sharedPreferences = _context.getSharedPreferences(APP_PREFERENCES, PRIVATE_MODE);
         SharedPreferences.Editor editor;
@@ -136,4 +138,12 @@ public class SharedPreferencesClass {
         return sharedPreferences.getInt(USER_ODOO_ID, DEFAULT_ODOO_ID);
     }
 
+    public void setUserType(int userType, boolean bValue){
+        editor.putInt(USER_TYPE, userType);
+        editor.putBoolean(IS_LOGGED_IN,bValue );
+        editor.apply();
+    }
+    public int getUserType(){
+        return sharedPreferences.getInt(USER_TYPE, DEFAULT_USER_TYPE);
+    }
 }

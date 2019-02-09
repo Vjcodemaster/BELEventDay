@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -25,6 +26,7 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
     public static OnAsyncInterfaceListener onAsyncInterfaceListener;
     private LottieAnimationView lottieAnimationView;
     ArrayList<String> alStallNames;
+    ImageButton ibAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +40,13 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
 
     private void initClasses() {
         sharedPreferencesClass = new SharedPreferencesClass(LoginActivity.this);
-        if(sharedPreferencesClass.getUserLogStatus()){
-            startMainActivity();
+        if (sharedPreferencesClass.getUserLogStatus()) {
+            if (sharedPreferencesClass.getUserType() == 0) {
+                Intent inRegisterActivity = new Intent(LoginActivity.this, RegisterEmployeeActivity.class);
+                startActivity(inRegisterActivity);
+            } else {
+                startMainActivity();
+            }
             finish();
         }
         onAsyncInterfaceListener = this;
@@ -50,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
         btnLogin = findViewById(R.id.btn_stall_login);
         etID = findViewById(R.id.et_stall_id);
         lottieAnimationView = findViewById(R.id.lottie_view);
+        ibAdmin = findViewById(R.id.ib_admin);
 
     }
 
@@ -62,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
                 if (sID.length() <= 4) {
                     Toast.makeText(LoginActivity.this, "Invalid ID", Toast.LENGTH_LONG).show();
                 } else {
-                    if(alStallNames.contains(sID)){
+                    if (alStallNames.contains(sID)) {
                         startMainActivity();
                         sharedPreferencesClass.setUserLogStatus(true, sID);
                         finish();
@@ -74,18 +82,25 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
                 }
             }
         });
+        ibAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent adminActivity = new Intent(LoginActivity.this, AdminActivity.class);
+                startActivity(adminActivity);
+            }
+        });
     }
 
     @Override
     public void onAsyncComplete(String sMSG, int type, String sResult) {
-        switch (sMSG){
+        switch (sMSG) {
             case "LOGIN_SUCCESS":
                 startMainActivity();
-            break;
+                break;
         }
     }
 
-    private void startMainActivity(){
+    private void startMainActivity() {
         Intent inMainActivity = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(inMainActivity);
     }

@@ -28,7 +28,10 @@
         <service
             android:name="app_utility.OfflineTransferService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".AdminActivity" />
+        <activity android:name=".RegisterEmployeeActivity"></activity>
     </application>
 
 </manifest>

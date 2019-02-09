@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
-    <!--<FrameLayout
+    <FrameLayout
         android:id="@+id/fl_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:onClick="onClick"
             android:src="@drawable/admin" />
 
-    </FrameLayout>-->
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/fl_container"
