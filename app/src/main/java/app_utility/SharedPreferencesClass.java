@@ -4,6 +4,8 @@ package app_utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static app_utility.StaticReferenceClass.DEFAULT_ODOO_ID;
+
 
 public class SharedPreferencesClass {
 
@@ -18,6 +20,8 @@ public class SharedPreferencesClass {
 
     private static final int PRIVATE_MODE = 0;
 
+
+
     // 0 = stall;
     // 1 = admin
 
@@ -31,6 +35,10 @@ public class SharedPreferencesClass {
     private static final String USER_TYPE = "USER_TYPE";
 
     private static final String IS_LOGGED_IN = "IS_LOGGED_IN";
+
+    private static final String USER_ODOO_ID = "USER_ODOO_ID";
+
+    private static final String USER_NAME = "USER_NAME";
 
     //private static final String KEY_TAG_ID = "tagID";
     SharedPreferences.Editor editor;
@@ -102,11 +110,12 @@ public class SharedPreferencesClass {
      * Else won't do anything
      */
 
-    public void setUserLogStatus(boolean value){
+    public void setUserLogStatus(boolean bValue, String sValue){
         /*SharedPreferences sharedPreferences = _context.getSharedPreferences(APP_PREFERENCES, PRIVATE_MODE);
         SharedPreferences.Editor editor;
         editor = sharedPreferences.edit();*/
-        editor.putBoolean(IS_LOGGED_IN, value);
+        editor.putBoolean(IS_LOGGED_IN, bValue);
+        editor.putString(USER_NAME, sValue);
         editor.apply();
     }
 
@@ -114,5 +123,17 @@ public class SharedPreferencesClass {
         return sharedPreferences.getBoolean(IS_LOGGED_IN, false);
     }
 
+    public String getUserName(){
+        return sharedPreferences.getString(USER_NAME, null);
+    }
+
+    public void setUserOdooID(int userOdooID){
+        editor.putInt(USER_ODOO_ID, userOdooID);
+        editor.apply();
+    }
+
+    public int getUserOdooID(){
+        return sharedPreferences.getInt(USER_ODOO_ID, DEFAULT_ODOO_ID);
+    }
 
 }

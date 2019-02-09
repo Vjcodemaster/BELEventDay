@@ -64,7 +64,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_AMOUNT + " TEXT, "
                 + KEY_TIME + " TEXT)";
 
-        String CREATE_TABLE_TEMPORARY = "CREATE TABLE " + TABLE_PERMANENT + "("
+        String CREATE_TABLE_TEMPORARY = "CREATE TABLE " + TABLE_TEMPORARY + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, "
                 + KEY_STALL_ID + " TEXT, "
                 + KEY_EMP_ID + " TEXT, "
@@ -362,7 +362,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteData(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         //db.delete(TABLE_RECENT, KEY_ID + " = ?", new String[] { String.valueOf(recent.getID()) });
-        db.delete(TABLE_PERMANENT, KEY_ID + " = " + id, null);
+        db.delete(TABLE_TEMPORARY, KEY_ID + " = " + id, null);
         db.close();
     }
 

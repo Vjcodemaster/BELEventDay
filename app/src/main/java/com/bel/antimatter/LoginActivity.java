@@ -14,6 +14,9 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class LoginActivity extends AppCompatActivity implements OnAsyncInterfaceListener {
 
     Button btnLogin;
@@ -21,6 +24,7 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
     SharedPreferencesClass sharedPreferencesClass;
     public static OnAsyncInterfaceListener onAsyncInterfaceListener;
     private LottieAnimationView lottieAnimationView;
+    ArrayList<String> alStallNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,12 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
 
     private void initClasses() {
         sharedPreferencesClass = new SharedPreferencesClass(LoginActivity.this);
+        if(sharedPreferencesClass.getUserLogStatus()){
+            startMainActivity();
+            finish();
+        }
         onAsyncInterfaceListener = this;
+        alStallNames = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.stall_names)));
     }
 
     private void initView() {
@@ -50,11 +59,18 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
             public void onClick(View v) {
                 String sID = etID.getEditText().getText().toString().toLowerCase().trim();
 
-                if (sID.length() <= 2) {
+                if (sID.length() <= 4) {
                     Toast.makeText(LoginActivity.this, "Invalid ID", Toast.LENGTH_LONG).show();
                 } else {
-                    BELAsyncTask belAsyncTask = new BELAsyncTask(LoginActivity.this);
-                    belAsyncTask.execute(String.valueOf(5), sID);
+                    if(alStallNames.contains(sID)){
+                        startMainActivity();
+                        sharedPreferencesClass.setUserLogStatus(true, sID);
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Invalid ID, Contact Admin", Toast.LENGTH_LONG).show();
+                    }
+                    /*BELAsyncTask belAsyncTask = new BELAsyncTask(LoginActivity.this);
+                    belAsyncTask.execute(String.valueOf(5), sID);*/
                 }
             }
         });
@@ -64,9 +80,13 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
     public void onAsyncComplete(String sMSG, int type, String sResult) {
         switch (sMSG){
             case "LOGIN_SUCCESS":
-                Intent inMainActivity = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(inMainActivity);
+                startMainActivity();
             break;
         }
+    }
+
+    private void startMainActivity(){
+        Intent inMainActivity = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(inMainActivity);
     }
 }

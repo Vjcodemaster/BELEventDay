@@ -11,4 +11,17 @@
     <!-- related to progress bar-->
     <string name="please_wait">Please wait&#8230;</string>
     <string name="scan">Scan</string>
+
+    <string-array name="stall_names">
+        <item>stall1</item>
+        <item>stall2</item>
+        <item>stall3</item>
+        <item>stall4</item>
+        <item>stall5</item>
+        <item>stall6</item>
+        <item>stall7</item>
+        <item>stall8</item>
+        <item>stall9</item>
+        <item>stall10</item>
+    </string-array>
 </resources>

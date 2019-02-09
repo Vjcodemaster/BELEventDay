@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static app_utility.OfflineTransferService.onAsyncInterfaceListener;
 import static app_utility.StaticReferenceClass.DB_NAME;
 import static app_utility.StaticReferenceClass.NETWORK_ERROR_CODE;
 import static app_utility.StaticReferenceClass.PASSWORD;
@@ -27,11 +28,26 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
     private Context context;
     private HashMap<String, Object> hmDataList = new HashMap<>();
     private int nOrderID = 191;
+    private int odooID = StaticReferenceClass.DEFAULT_ODOO_ID;
+
+    private int nTemporaryDBID;
+    private ArrayList<String> alEmpID = new ArrayList<>();
+    private ArrayList<String> alAmount = new ArrayList<>();
+    private ArrayList<String> alTime = new ArrayList<>();
+    //private ArrayList<String> alEmpID = new ArrayList<>();
+
+    ArrayList<DataBaseHelper> alDBTemporaryData;
+    DatabaseHandler db;
 
     public BELAsyncTask(Context context) {
         this.context = context;
     }
 
+    public BELAsyncTask(Context context, ArrayList<DataBaseHelper> alDBTemporaryData, DatabaseHandler db) {
+        this.context = context;
+        this.alDBTemporaryData = alDBTemporaryData;
+        this.db = db;
+    }
     /*public BELAsyncTask(Activity aActivity, OnAsyncTaskInterface onAsyncTaskInterface,
                         HashMap<String, Object> hmDataList) {
         this.aActivity = aActivity;
@@ -46,11 +62,14 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
     private int type;
     private String sStallName;
     private int[] IDS = new int[2];
+    String sEmpID;
+    String sAmount;
+    String sTime;
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        setProgressBar();
+        //setProgressBar();
     }
 
     @Override
@@ -76,6 +95,24 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
                 sStallName = params[1];
                 validateLogin();
                 break;
+            case 6:
+                int ID = Integer.valueOf(params[1]);
+                //if (alDBTemporaryData.size() >= 1) {
+                for (int i = 0; i < alDBTemporaryData.size(); i++) {
+                        /*alEmpID.add(alDBTemporaryData.get(i).get_emp_id());
+                        alAmount.add(alDBTemporaryData.get(i).get_amount());
+                        alTime.add(alDBTemporaryData.get(i).get_time());*/
+                    nTemporaryDBID = alDBTemporaryData.get(i).get_id();
+                    sEmpID = alDBTemporaryData.get(i).get_emp_id();
+                    sAmount = alDBTemporaryData.get(i).get_amount();
+                    sTime = alDBTemporaryData.get(i).get_time();
+                        /*alAmount.add(alDBTemporaryData.get(i).get_amount());
+                        alTime.add(alDBTemporaryData.get(i).get_time());*/
+                    createOne2Many(ID, sEmpID, sAmount, sTime, nTemporaryDBID);
+                }
+                //}
+
+                break;
         }
         return null;
     }
@@ -96,17 +133,26 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
             case 4:
                 //onAsyncTaskInterface.onAsyncTaskComplete("READ_PRODUCTS", type, lhmProductsWithID, alPosition);
                 break;
-            case 5:
+            /*case 5:
 
                 if(isPresent){
                     LoginActivity.onAsyncInterfaceListener.onAsyncComplete("LOGIN_SUCCESS", type, "");
                     isPresent =false;
                 }
+                break;*/
+            case 5:
+
+                if (isPresent) {
+                    onAsyncInterfaceListener.onAsyncComplete("ODOO_ID_RETRIEVED", odooID, "");
+                    //LoginActivity.onAsyncInterfaceListener.onAsyncComplete("LOGIN_SUCCESS", type, "");
+                    isPresent = false;
+                }
                 break;
+
         }
-        if (circularProgressBar != null && circularProgressBar.isShowing()) {
+        /*if (circularProgressBar != null && circularProgressBar.isShowing()) {
             circularProgressBar.dismiss();
-        }
+        }*/
     }
 
     private void loginTask() {
@@ -129,29 +175,40 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
         //return isConnected;
     }
 
-    private void validateLogin(){
+    private void validateLogin() {
         //240
         try {
             OdooConnect oc = OdooConnect.connect(SERVER_URL, PORT_NO, DB_NAME, USER_ID, PASSWORD);
             Object[] conditions = new Object[1];
-            conditions[0] = new Object[]{"id", "!=", "0099009"};
-            //conditions[1] = new Object[]{"res_field", "=", "image_medium"};
-            List<HashMap<String, Object>> stallData = oc.search_read("res.partner", new Object[]{conditions}, "name");
-            for (int i = 0; i < stallData.size(); ++i) {
+            //conditions[0] = new Object[]{"id", "!=", "0099009"};
+            conditions[0] = new Object[]{"partner_id", "=", sStallName};
+            List<HashMap<String, Object>> stallData = oc.search_read("sale.order", new Object[]{conditions}, "name");
+            if(stallData.size()==1){
+                isPresent = true;
+                odooID = Integer.valueOf(stallData.get(0).get("id").toString());
+            }
+            /*for (int i = 0; i < stallData.size(); ++i) {
                 //int id = Integer.valueOf(data.get(i).get("id").toString());
                 String sName = String.valueOf(stallData.get(i).get("name").toString());
-                if(sStallName.equals(sName)){
+
+                *//*if(sStallName.equals(sName)){
                     isPresent = true;
+
+                    return;
+                }*//*
+                if (sStallName.equals(sName)) {
+                    isPresent = true;
+                    odooID = Integer.valueOf(stallData.get(i).get("id").toString());
                     return;
                 }
-            }
+            }*/
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void createOrder(){
+    private void createOrder() {
         //240
         try {
             OdooConnect oc = OdooConnect.connect(SERVER_URL, PORT_NO, DB_NAME, USER_ID, PASSWORD);
@@ -160,14 +217,14 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
                 //put("state", ORDER_STATE[0]);
             }});
             IDS[0] = createCustomer;
-            createOne2Many(createCustomer);
-        }catch (Exception e){
+            //createOne2Many(createCustomer);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    private void createOne2Many(final int ID) {
+    private void createOne2Many(final int ID, final String sEmpID, final String sAmount, String sTime, int dbID) {
 
         try {
             OdooConnect oc = OdooConnect.connect(SERVER_URL, PORT_NO, DB_NAME, USER_ID, PASSWORD);
@@ -180,12 +237,18 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
             }});*/
 
             //if (alOne2ManyModelNames.size() >= 1) {
+
+            if (oc != null) {
                 @SuppressWarnings("unchecked")
                 Integer one2Many = oc.create("sale.order.line", new HashMap() {{
-                    put("product_id", 113);
+                    put("product_id", 4);
+                    put("name", sEmpID);
+                    put("price_unit", sAmount);
                     put("order_id", ID);
                 }});
-            IDS[1] = one2Many;
+                IDS[1] = one2Many;
+                db.deleteData(dbID);
+            }
             //}
 
         } catch (Exception e) {
@@ -195,12 +258,12 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
         //return one2Many;
     }
 
-    private void placeOrder(){
+    private void placeOrder() {
         //240
         try {
             OdooConnect oc = OdooConnect.connect(SERVER_URL, PORT_NO, DB_NAME, USER_ID, PASSWORD);
             Boolean idC = oc.write("sale.order", new Object[]{nOrderID}, hmDataList);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -252,9 +315,9 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
             alData.add(productsData.get(i).get("id").toString());
             //alData.add(data.get(i).get("name").toString());
             alData.add(productsData.get(i).get("list_price").toString());
-            for(int j=0; j< imageData.size(); j++){
+            for (int j = 0; j < imageData.size(); j++) {
                 String base64 = imageData.get(j).get("store_fname").toString();
-                if(imageData.get(j).get("res_name").toString().equals(sName)){
+                if (imageData.get(j).get("res_name").toString().equals(sName)) {
                     alData.add(base64);
                     alPosition.add(i);
                     break;
@@ -265,7 +328,7 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
     }
 
     private void unableToConnectServer(int errorCode) {
-        //LoginActivity.asyncInterface.onAsyncTaskCompleteGeneral("SERVER_ERROR", 2001, errorCode, "", null);
+        OfflineTransferService.onAsyncInterfaceListener.onAsyncComplete("SERVER_ERROR", errorCode, "");
     }
 
     private void setProgressBar() {
