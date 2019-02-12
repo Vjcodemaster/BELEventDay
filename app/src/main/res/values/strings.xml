@@ -12,6 +12,8 @@
 
     <string name="scan">Scan</string>
 
+    <string name="transactions">My Transactions</string>
+
     <string name="register">Register</string>
     <!-- related to progress bar-->
     <string name="please_wait">Please wait&#8230;</string>
@@ -28,4 +30,6 @@
         <item>stall9</item>
         <item>stall10</item>
     </string-array>
+
+    <string name="all_my_transactions">My Stall</string>
 </resources>

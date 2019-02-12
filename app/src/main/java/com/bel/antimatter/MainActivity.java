@@ -2,6 +2,8 @@ package com.bel.antimatter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import app_utility.DataBaseHelper;
 import app_utility.DatabaseHandler;
 import app_utility.OfflineTransferService;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
     LinearLayout llScan, llAmountParent;
     TextInputLayout etAmount;
-    private Button btnScan;
+    private Button btnScan, btnMyTransaction;
     CodeScannerView scannerView;
     TextView tvEmpID;
     int count = 0;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         llScan = findViewById(R.id.ll_scan);
         llAmountParent = findViewById(R.id.ll_amount_parent);
         btnScan = findViewById(R.id.btn_scan);
+        btnMyTransaction = findViewById(R.id.btn_my_transactions);
         scannerView = findViewById(R.id.scanner_view);
         etAmount = findViewById(R.id.et_amount);
         tvEmpID = findViewById(R.id.tv_emp_id);
@@ -91,6 +94,13 @@ public class MainActivity extends AppCompatActivity {
                hideKeyboardFrom(etAmount);
            }
        });
+
+        btnMyTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMyTransactionFragment();
+            }
+        });
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -112,6 +122,16 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void openMyTransactionFragment(){
+        Fragment newFragment;
+        FragmentTransaction transaction;
+        newFragment = MyTransactionFragment.newInstance("", "");
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.ll_scan, newFragment, null);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void hideKeyboardFrom(View view) {
