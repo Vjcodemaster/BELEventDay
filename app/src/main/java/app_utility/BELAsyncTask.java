@@ -65,6 +65,7 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
     String sEmpID;
     String sAmount;
     String sTime;
+    String sScannedID;
 
     @Override
     protected void onPreExecute() {
@@ -80,7 +81,18 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
                 loginTask();
                 break;
             case 2:
-                createOrder();
+                //createEmployeeID(params[1], params[2]);
+                for (int i = 0; i < alDBTemporaryData.size(); i++) {
+                        /*alEmpID.add(alDBTemporaryData.get(i).get_emp_id());
+                        alAmount.add(alDBTemporaryData.get(i).get_amount());
+                        alTime.add(alDBTemporaryData.get(i).get_time());*/
+                    nTemporaryDBID = alDBTemporaryData.get(i).get_id();
+                    sEmpID = alDBTemporaryData.get(i).get_emp_id();
+                    sScannedID = alDBTemporaryData.get(i).get_scanned_id();
+                        /*alAmount.add(alDBTemporaryData.get(i).get_amount());
+                        alTime.add(alDBTemporaryData.get(i).get_time());*/
+                    createEmployeeID(nTemporaryDBID, sEmpID, sScannedID);
+                }
                 //updateTask();
                 break;
             case 3:
@@ -104,11 +116,12 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
                         alTime.add(alDBTemporaryData.get(i).get_time());*/
                     nTemporaryDBID = alDBTemporaryData.get(i).get_id();
                     sEmpID = alDBTemporaryData.get(i).get_emp_id();
+                    sScannedID = alDBTemporaryData.get(i).get_scanned_id();
                     sAmount = alDBTemporaryData.get(i).get_amount();
                     sTime = alDBTemporaryData.get(i).get_time();
                         /*alAmount.add(alDBTemporaryData.get(i).get_amount());
                         alTime.add(alDBTemporaryData.get(i).get_time());*/
-                    createOne2Many(ID, sEmpID, sAmount, sTime, nTemporaryDBID);
+                    createOne2Many(ID, sEmpID, sScannedID, sAmount, sTime, nTemporaryDBID);
                 }
                 //}
 
@@ -130,6 +143,9 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
             return;
         }
         switch (type) {
+            case 2:
+                AdminRegisterService.onAsyncInterfaceListener.onAsyncComplete("ODOO_ID_RETRIEVED", odooID, "");
+                break;
             case 4:
                 //onAsyncTaskInterface.onAsyncTaskComplete("READ_PRODUCTS", type, lhmProductsWithID, alPosition);
                 break;
@@ -141,12 +157,14 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
                 }
                 break;*/
             case 5:
-
                 if (isPresent) {
                     onAsyncInterfaceListener.onAsyncComplete("ODOO_ID_RETRIEVED", odooID, "");
                     //LoginActivity.onAsyncInterfaceListener.onAsyncComplete("LOGIN_SUCCESS", type, "");
                     isPresent = false;
                 }
+                break;
+            case 6:
+                OfflineTransferService.onAsyncInterfaceListener.onAsyncComplete("ODOO_ID_RETRIEVED", odooID, "");
                 break;
 
         }
@@ -183,7 +201,7 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
             //conditions[0] = new Object[]{"id", "!=", "0099009"};
             conditions[0] = new Object[]{"partner_id", "=", sStallName};
             List<HashMap<String, Object>> stallData = oc.search_read("sale.order", new Object[]{conditions}, "name");
-            if(stallData.size()==1){
+            if (stallData.size() == 1) {
                 isPresent = true;
                 odooID = Integer.valueOf(stallData.get(0).get("id").toString());
             }
@@ -208,7 +226,7 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
         }
     }
 
-    private void createOrder() {
+    /*private void createOrder() {
         //240
         try {
             OdooConnect oc = OdooConnect.connect(SERVER_URL, PORT_NO, DB_NAME, USER_ID, PASSWORD);
@@ -221,10 +239,26 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }*/
+
+    private void createEmployeeID(final int dbID, final String sEmpID, final String sMapNumber) {
+        //240
+        try {
+            OdooConnect oc = OdooConnect.connect(SERVER_URL, PORT_NO, DB_NAME, USER_ID, PASSWORD);
+            Integer createEmployee = oc.create("hr.employee", new HashMap() {{
+                put("name", sEmpID);
+                put("mobile_phone", sMapNumber);
+                //put("state", ORDER_STATE[0]);
+            }});
+            IDS[0] = createEmployee;
+            db.deleteEmployeeData(dbID);
+            //createOne2Many(createCustomer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-
-    private void createOne2Many(final int ID, final String sEmpID, final String sAmount, String sTime, int dbID) {
+    private void createOne2Many(final int ID, final String sEmpID, final String sScannedID, final String sAmount, final String sTime, int dbID) {
 
         try {
             OdooConnect oc = OdooConnect.connect(SERVER_URL, PORT_NO, DB_NAME, USER_ID, PASSWORD);
@@ -240,14 +274,16 @@ public class BELAsyncTask extends AsyncTask<String, Void, String> {
 
             if (oc != null) {
                 @SuppressWarnings("unchecked")
+                //String[] sa = sScannedID.split(";");
+                //final String ssScannedID = sa[1];
                 Integer one2Many = oc.create("sale.order.line", new HashMap() {{
-                    put("product_id", 4);
-                    put("name", sEmpID);
+                    put("product_id", 1); //4
+                    put("name", sScannedID + "," + sEmpID + "," + sTime);
                     put("price_unit", sAmount);
                     put("order_id", ID);
                 }});
                 IDS[1] = one2Many;
-                db.deleteData(dbID);
+                    db.deleteData(dbID);
             }
             //}
 

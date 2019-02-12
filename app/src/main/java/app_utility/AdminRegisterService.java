@@ -23,12 +23,12 @@ import androidx.core.app.NotificationCompat;
 import static android.content.ContentValues.TAG;
 import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
 
-public class OfflineTransferService extends Service implements OnAsyncInterfaceListener {
+public class AdminRegisterService extends Service implements OnAsyncInterfaceListener {
 
     String channelId = "app_utility.OfflineTransferService";
     String channelName = "offline_transfer";
 
-    public static OfflineTransferService refOfService;
+    public static AdminRegisterService refOfService;
     /*startService(new Intent(MyService.ServiceIntent));
     stopService(new Intent((MyService.ServiceIntent));*/
 
@@ -54,7 +54,7 @@ public class OfflineTransferService extends Service implements OnAsyncInterfaceL
     ArrayList<DataBaseHelper> alDBTemporaryData;
 
 
-    public OfflineTransferService() {
+    public AdminRegisterService() {
     }
 
     @Override
@@ -86,21 +86,22 @@ public class OfflineTransferService extends Service implements OnAsyncInterfaceL
             public void run() {
                 handler.post(new Runnable() {
                     public void run() {
-                        if (sharedPreferencesClass.getUserOdooID() == StaticReferenceClass.DEFAULT_ODOO_ID) {
+                        alDBTemporaryData = new ArrayList<>(db.getAllEmployeeData());
+                        if (alDBTemporaryData.size() >= 1 && VOLLEY_STATUS.equals("NOT_RUNNING")) {
+                            belAsyncTask = new BELAsyncTask(getApplicationContext(), alDBTemporaryData, db);
+                            belAsyncTask.execute(String.valueOf(2), sharedPreferencesClass.getUserName());
+                            VOLLEY_STATUS = "RUNNING";
+                        }
+                        /*if (sharedPreferencesClass.getUserOdooID() == StaticReferenceClass.DEFAULT_ODOO_ID) {
                             belAsyncTask = new BELAsyncTask(getApplicationContext());
                             belAsyncTask.execute(String.valueOf(5), sharedPreferencesClass.getUserName());
                         } else {
                             alDBTemporaryData = new ArrayList<>(db.getAllTemporaryData());
-                            if (alDBTemporaryData.size() >= 1 && VOLLEY_STATUS.equals("NOT_RUNNING")) {
+                            if (alDBTemporaryData.size() >= 1) {
                                 belAsyncTask = new BELAsyncTask(getApplicationContext(), alDBTemporaryData, db);
                                 belAsyncTask.execute(String.valueOf(6), String.valueOf(sharedPreferencesClass.getUserOdooID()));
-                                VOLLEY_STATUS = "RUNNING";
-                            } else {
-                                int count = alDBTemporaryData.size();
-                                if (count >= 1)
-                                    notifyUser(String.valueOf(count));
                             }
-                        }
+                        }*/
                         //Toast.makeText(getApplicationContext(), "I am still running", Toast.LENGTH_LONG).show();
                         Log.e("Service status: ", "RUNNING");
                     }
@@ -180,43 +181,5 @@ public class OfflineTransferService extends Service implements OnAsyncInterfaceL
         }
         VOLLEY_STATUS = "NOT_RUNNING";
     }
-
-
-    private void notifyUser(String sCount) {
-        inboxStyle = new NotificationCompat.InboxStyle();
-        notifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        /*Intent acceptIntent = new Intent(TrackingService.this, TrackingBroadCastReceiver.class);
-        acceptIntent.setAction("android.intent.action.ac.user.accept");
-        PendingIntent acceptPI = PendingIntent.getBroadcast(TrackingService.this, 0, acceptIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-        Intent declineIntent = new Intent(TrackingService.this, TrackingBroadCastReceiver.class);
-        declineIntent.setAction("android.intent.action.ac.user.decline");
-        PendingIntent declinePI = PendingIntent.getBroadcast(TrackingService.this, 0, declineIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);*/
-
-        nBuilder = new NotificationCompat.Builder(OfflineTransferService.
-                this, channelId)
-                .setSmallIcon(R.drawable.admin)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(sCount)
-                .setSubText(sCount)
-                //.addAction(R.drawable.download, "Accept", acceptPI)
-                //.addAction(R.drawable.download, "Decline", declinePI)
-                //.setContentIntent(acceptPI)
-                //.setContentIntent(declinePI)
-                .setOnlyAlertOnce(true)
-                .setAutoCancel(true)
-                .setPriority(Notification.PRIORITY_MAX);
-        // Allows notification to be cancelled when user clicks it
-        nBuilder.setAutoCancel(true);
-        nBuilder.setStyle(inboxStyle);
-        int notificationId = 515;
-        notifyMgr.notify(notificationId, nBuilder.build());
-    }
-
 
 }

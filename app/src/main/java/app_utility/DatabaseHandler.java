@@ -24,12 +24,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //DataBaseHelper table name (2nd table for all tab)
     private static final String TABLE_TEMPORARY = "TABLE_TEMPORARY";
 
+    private static final String TABLE_EMPLOYEE = "TABLE_EMPLOYEE";
+
     // BEL_DATA Table Columns names
     private static final String KEY_ID = "_id";
     private static final String KEY_STALL_ID = "stall_id";
     private static final String KEY_EMP_ID = "emp_id";
     private static final String KEY_AMOUNT = "amount";
     private static final String KEY_TIME = "time";
+
+    private static final String KEY_SCAN_ID = "scan_id";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -57,10 +61,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_UUID + " TEXT, "
                 + KEY_RSSI + " TEXT)";*/
 
+        String CREATE_TABLE_EMPLOYEE = "CREATE TABLE " + TABLE_EMPLOYEE + "("
+                + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_EMP_ID + " TEXT, "
+                + KEY_SCAN_ID + " TEXT)";
+
+
         String CREATE_TABLE_PERMANENT = "CREATE TABLE " + TABLE_PERMANENT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, "
                 + KEY_STALL_ID + " TEXT, "
                 + KEY_EMP_ID + " TEXT, "
+                + KEY_SCAN_ID + " TEXT, "
                 + KEY_AMOUNT + " TEXT, "
                 + KEY_TIME + " TEXT)";
 
@@ -68,9 +79,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY, "
                 + KEY_STALL_ID + " TEXT, "
                 + KEY_EMP_ID + " TEXT, "
+                + KEY_SCAN_ID + " TEXT, "
                 + KEY_AMOUNT + " TEXT, "
                 + KEY_TIME + " TEXT)";
 
+        db.execSQL(CREATE_TABLE_EMPLOYEE);
         db.execSQL(CREATE_TABLE_TEMPORARY);
         db.execSQL(CREATE_TABLE_PERMANENT);
     }
@@ -86,6 +99,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void addDataToEmployeeTable(DataBaseHelper dataBaseHelper) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        //values.put(KEY_ID, dataBaseHelper.getID()); // Contact Name
+        values.put(KEY_EMP_ID, dataBaseHelper.get_emp_id()); // Contact Phone
+        values.put(KEY_SCAN_ID, dataBaseHelper.get_scanned_id());
+
+        // Inserting Row
+        //db.insert(TABLE_RECENT, null, values);
+        db.insert(TABLE_EMPLOYEE, null, values);
+
+        db.close(); // Closing database connection
+    }
+
     // Adding new data
     public void addData(DataBaseHelper dataBaseHelper) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -94,6 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //values.put(KEY_ID, dataBaseHelper.getID()); // Contact Name
         values.put(KEY_STALL_ID, dataBaseHelper.get_stall_name());
         values.put(KEY_EMP_ID, dataBaseHelper.get_emp_id()); // Contact Phone
+        values.put(KEY_SCAN_ID, dataBaseHelper.get_scanned_id());
         values.put(KEY_AMOUNT, dataBaseHelper.get_amount());
         values.put(KEY_TIME, dataBaseHelper.get_time());
 
@@ -232,8 +261,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 dataBaseHelper.set_id(Integer.parseInt(cursor.getString(0)));
                 dataBaseHelper.set_stall_name(cursor.getString(1));
                 dataBaseHelper.set_emp_id(cursor.getString(2));
-                dataBaseHelper.set_amount(cursor.getString(3));
-                dataBaseHelper.set_time(cursor.getString(4));
+                dataBaseHelper.set_scanned_id(cursor.getString(3));
+                dataBaseHelper.set_amount(cursor.getString(4));
+                dataBaseHelper.set_time(cursor.getString(5));
+                // Adding data to list
+                dataBaseHelperList.add(dataBaseHelper);
+            } while (cursor.moveToNext());
+        }
+
+        // return recent list
+        return dataBaseHelperList;
+    }
+
+    public List<DataBaseHelper> getAllEmployeeData() {
+        List<DataBaseHelper> dataBaseHelperList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_EMPLOYEE;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                DataBaseHelper dataBaseHelper = new DataBaseHelper();
+
+                dataBaseHelper.set_id(Integer.parseInt(cursor.getString(0)));
+                dataBaseHelper.set_emp_id(cursor.getString(1));
+                dataBaseHelper.set_scanned_id(cursor.getString(2));
                 // Adding data to list
                 dataBaseHelperList.add(dataBaseHelper);
             } while (cursor.moveToNext());
@@ -363,6 +418,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         //db.delete(TABLE_RECENT, KEY_ID + " = ?", new String[] { String.valueOf(recent.getID()) });
         db.delete(TABLE_TEMPORARY, KEY_ID + " = " + id, null);
+        db.close();
+    }
+
+    public void deleteEmployeeData(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        //db.delete(TABLE_RECENT, KEY_ID + " = ?", new String[] { String.valueOf(recent.getID()) });
+        db.delete(TABLE_EMPLOYEE, KEY_ID + " = " + id, null);
         db.close();
     }
 

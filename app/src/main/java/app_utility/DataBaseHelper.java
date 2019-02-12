@@ -11,16 +11,23 @@ public class DataBaseHelper {
     private String _stall_name;
     private String _amount;
     private String _time;
+    private String _scanned_id;
 
     // Empty constructor
     public DataBaseHelper(){
 
     }
-    public DataBaseHelper(String _emp_id, String _stall_name, String _amount, String _time){
+    public DataBaseHelper(String _emp_id, String _scanned_id, String _stall_name, String _amount, String _time){
         this._emp_id = _emp_id;
+        this._scanned_id = _scanned_id;
         this._stall_name = _stall_name;
         this._amount = _amount;
         this._time = _time;
+    }
+
+    public DataBaseHelper(String _emp_id, String _scanned_id){
+        this._emp_id = _emp_id;
+        this._scanned_id = _scanned_id;
     }
 
     // constructor
@@ -100,4 +107,12 @@ public class DataBaseHelper {
     }
 
 
+    public String get_scanned_id(){
+        return this._scanned_id;
+    }
+
+    // setting emailID
+    public void set_scanned_id(String _scanned_id){
+        this._scanned_id = _scanned_id;
+    }
 }

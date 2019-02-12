@@ -49,6 +49,7 @@ public class AdminActivity extends AppCompatActivity {
                 Intent registerActivityIn = new Intent(AdminActivity.this, RegisterEmployeeActivity.class);
                 startActivity(registerActivityIn);
                 sharedPreferencesClass.setUserType(0, true); //admin user
+                finish();
             } else {
                 Toast.makeText(AdminActivity.this, "Invalid Password", Toast.LENGTH_LONG).show();
             }

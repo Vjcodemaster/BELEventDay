@@ -7,12 +7,14 @@ import app_utility.DatabaseHandler;
 import app_utility.OfflineTransferService;
 import app_utility.SharedPreferencesClass;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                mCodeScanner.startPreview();
                llScan.setVisibility(View.GONE);
                flScanner.setVisibility(View.VISIBLE);
+               hideKeyboardFrom(etAmount);
            }
        });
 
@@ -97,10 +100,12 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         //llParent.setVisibility(View.VISIBLE);
                         //flScannerMenu.setVisibility(View.VISIBLE);
-                        Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, result.getText().trim(), Toast.LENGTH_SHORT).show();
+                        tvEmpID.setText(result.getText().trim());
                         flScanner.setVisibility(View.GONE);
                         llScan.setVisibility(View.GONE);
                         llAmountParent.setVisibility(View.VISIBLE);
+                        etAmount.getEditText().setText("");
                         //loadDoneFragment();
                         //MainActivity.onFragmentInteractionListener.onResultReceived("ENABLE_TOOLBAR", 1, "",null);
                     }
@@ -109,10 +114,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void hideKeyboardFrom(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     public void multiOnClick(View view){
         switch (view.getId()){
             case R.id.btn_done:
                 validateNSave();
+                hideKeyboardFrom(etAmount);
                 break;
             case R.id.tv_10:
                 etAmount.getEditText().setText("10");
@@ -138,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
     private void validateNSave(){
         Date currentTime = Calendar.getInstance().getTime();
         String sAmount = etAmount.getEditText().getText().toString().trim();
+        String sScannedID = tvEmpID.getText().toString().trim();
         if(sAmount.length()>=1) {
             //int nFinalAmount = Integer.valueOf(etAmount.getEditText().getText().toString().trim());
             String sCurrentTime = currentTime.toString().trim().substring(11, 16);
@@ -146,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Toast.makeText(MainActivity.this, sCurrentTime + nFinalAmount, Toast.LENGTH_SHORT).show();
 
-            db.addData(new DataBaseHelper(sEmpID, sStallName, sAmount, sCurrentTime));
+            db.addData(new DataBaseHelper(sEmpID, sScannedID, sStallName, sAmount, sCurrentTime));
 
             //flScanner.setVisibility(View.GONE);
             llScan.setVisibility(View.VISIBLE);

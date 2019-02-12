@@ -31,7 +31,12 @@
             android:exported="true" />
 
         <activity android:name=".AdminActivity" />
-        <activity android:name=".RegisterEmployeeActivity"></activity>
+        <activity android:name=".RegisterEmployeeActivity" />
+
+        <service
+            android:name="app_utility.AdminRegisterService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
