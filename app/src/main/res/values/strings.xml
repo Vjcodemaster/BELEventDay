@@ -32,4 +32,6 @@
     </string-array>
 
     <string name="all_my_transactions">My Stall</string>
+    <string name="total">Total :\u0020</string>
+
 </resources>

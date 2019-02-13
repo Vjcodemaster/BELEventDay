@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import app_utility.DataBaseHelper;
 import app_utility.DatabaseHandler;
 import app_utility.OfflineTransferService;
+import app_utility.OnFragmentInteractionListener;
 import app_utility.SharedPreferencesClass;
 
 import android.app.Activity;
@@ -32,8 +33,9 @@ import com.google.zxing.Result;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     FrameLayout flScanner;
     private CodeScanner mCodeScanner;
@@ -214,5 +216,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onResultReceived(String sMessage, int nCase, String sResult, LinkedHashMap<String, String> lhmFoodAndQuantity) {
+
     }
 }

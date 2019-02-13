@@ -66,6 +66,27 @@
             android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="40dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="Enter IP"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimaryDark" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_stall_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

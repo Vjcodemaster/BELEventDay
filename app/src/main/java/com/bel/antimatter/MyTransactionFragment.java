@@ -16,8 +16,10 @@ import app_utility.OnFragmentInteractionListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
 /**
@@ -28,7 +30,7 @@ import java.util.ArrayList;
  * Use the {@link MyTransactionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyTransactionFragment extends Fragment {
+public class MyTransactionFragment extends Fragment implements OnFragmentInteractionListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -36,12 +38,13 @@ public class MyTransactionFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    public static OnFragmentInteractionListener mListener;
 
     ArrayList<DataBaseHelper> dbData;
     DatabaseHandler db;
 
     RecyclerView recyclerView;
+    TextView tvTotalAmount;
     MyTransactionRVAdapter myTransactionRVAdapter;
 
     public MyTransactionFragment() {
@@ -82,6 +85,7 @@ public class MyTransactionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_transaction, container, false);
 
+        tvTotalAmount = view.findViewById(R.id.tv_total_amount);
         recyclerView = view.findViewById(R.id.rv_transactions);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -111,4 +115,12 @@ public class MyTransactionFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onResultReceived(String sMessage, int nCase, String sResult, LinkedHashMap<String, String> lhmFoodAndQuantity) {
+        switch (sMessage){
+            case "UPDATE_AMOUNT":
+                tvTotalAmount.setText(String.valueOf(nCase));
+                break;
+        }
+    }
 }

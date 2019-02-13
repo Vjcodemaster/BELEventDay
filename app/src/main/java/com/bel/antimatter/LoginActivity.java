@@ -7,12 +7,15 @@ import app_utility.BELAsyncTask;
 import app_utility.OnAsyncInterfaceListener;
 import app_utility.PermissionHandler;
 import app_utility.SharedPreferencesClass;
+import app_utility.StaticReferenceClass;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -31,13 +34,14 @@ import static app_utility.StaticReferenceClass.CAMERA_CODE;
 public class LoginActivity extends AppCompatActivity implements OnAsyncInterfaceListener {
 
     Button btnLogin;
-    TextInputLayout etID;
+    TextInputLayout etID, etIP;
     SharedPreferencesClass sharedPreferencesClass;
     public static OnAsyncInterfaceListener onAsyncInterfaceListener;
     private LottieAnimationView lottieAnimationView;
     ArrayList<String> alStallNames;
     ImageButton ibAdmin;
     private int nPermissionFlag = 0;
+    String sIP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
         etID = findViewById(R.id.et_stall_id);
         lottieAnimationView = findViewById(R.id.lottie_view);
         ibAdmin = findViewById(R.id.ib_admin);
-
+etIP = findViewById(R.id.et_ip);
     }
 
     private void initClickEvents() {
@@ -84,6 +88,8 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
                     if (alStallNames.contains(sID)) {
                         startMainActivity();
                         sharedPreferencesClass.setUserLogStatus(true, sID);
+                        sIP = etIP.getEditText().getText().toString();
+                        StaticReferenceClass.SERVER_URL = sIP;
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid ID, Contact Admin", Toast.LENGTH_LONG).show();
@@ -100,6 +106,7 @@ public class LoginActivity extends AppCompatActivity implements OnAsyncInterface
                 startActivity(adminActivity);
             }
         });
+
     }
 
     @Override

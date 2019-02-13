@@ -3,9 +3,9 @@ package app_utility;
 
 public class StaticReferenceClass {
     public static final String LOGIN_URL = "http://192.168.1.46";//http://192.168.1.100:9040//
-    public static final String SERVER_URL = "192.168.43.49";//"192.168.31.67";//"192.168.0.101";//"192.168.1.46";//"192.168.42.192";//"192.168.1.41";//https://"18.222.197.80";//"autochipars.odoo.com";//
+    //public static final String SERVER_URL = "192.168.43.49";//"192.168.31.67";//"192.168.0.101";//"192.168.1.46";//"192.168.42.192";//"192.168.1.41";//https://"18.222.197.80";//"autochipars.odoo.com";//
     public static final int PORT_NO = 8069;//9040;//9080;//
-
+    public static String SERVER_URL = "192.168.43.49";
 
     public static final String DB_NAME = "demo";//"ARS";//"chellaminfotech-ars-master-73173";//"ARS_9040";//"test_db";//"auto";//
     public static final String USER_ID = "admin";//"vijay@gmail.com";//"vijay.eh4@gmail.com";//"suresh";//

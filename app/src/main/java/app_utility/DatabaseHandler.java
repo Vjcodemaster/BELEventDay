@@ -299,7 +299,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Getting data
-    public List<DataBaseHelper> getAllPermanentData() {
+    /*public List<DataBaseHelper> getAllPermanentData() {
         List<DataBaseHelper> dataBaseHelperList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_PERMANENT;
@@ -317,6 +317,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 dataBaseHelper.set_emp_id(cursor.getString(2));
                 dataBaseHelper.set_amount(cursor.getString(3));
                 dataBaseHelper.set_time(cursor.getString(4));
+                // Adding data to list
+                dataBaseHelperList.add(dataBaseHelper);
+            } while (cursor.moveToNext());
+        }
+
+        // return recent list
+        return dataBaseHelperList;
+    }*/
+
+    public List<DataBaseHelper> getAllPermanentData() {
+        List<DataBaseHelper> dataBaseHelperList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PERMANENT;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                DataBaseHelper dataBaseHelper = new DataBaseHelper();
+
+                dataBaseHelper.set_id(Integer.parseInt(cursor.getString(0)));
+                dataBaseHelper.set_stall_name(cursor.getString(1));
+                dataBaseHelper.set_emp_id(cursor.getString(2));
+                dataBaseHelper.set_scanned_id(cursor.getString(3));
+                dataBaseHelper.set_amount(cursor.getString(4));
+                dataBaseHelper.set_time(cursor.getString(5));
                 // Adding data to list
                 dataBaseHelperList.add(dataBaseHelper);
             } while (cursor.moveToNext());

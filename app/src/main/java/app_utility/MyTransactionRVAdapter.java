@@ -1,11 +1,13 @@
 package app_utility;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bel.antimatter.MyTransactionFragment;
 import com.bel.antimatter.R;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class MyTransactionRVAdapter extends RecyclerView.Adapter<MyTransactionRV
     Context context;
     private RecyclerView recyclerView;
     ArrayList<DataBaseHelper> dbData;
+    private int nTotalAmount;
 
     public MyTransactionRVAdapter(Context context, RecyclerView recyclerView, ArrayList<DataBaseHelper> dbData) {
         this.context = context;
@@ -39,6 +42,12 @@ public class MyTransactionRVAdapter extends RecyclerView.Adapter<MyTransactionRV
         holder.tvTime.setText(dbData.get(position).get_time());
         holder.tvEmployeeID.setText(dbData.get(position).get_emp_id());
         holder.tvAmount.setText(dbData.get(position).get_amount());
+
+        nTotalAmount = nTotalAmount + Integer.valueOf(dbData.get(position).get_amount());
+
+        if(position==dbData.size()-1){
+            MyTransactionFragment.mListener.onResultReceived("UPDATE_AMOUNT", nTotalAmount, "", null);
+        }
     }
 
     @Override
